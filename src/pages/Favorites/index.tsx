@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 
 import api from '../../services/api';
 import formatValue from '../../utils/formatValue';
+import { CategoryItem } from '../Dashboard/styles';
 
 import {
   Container,
@@ -32,7 +33,18 @@ const Favorites: React.FC = () => {
 
   useEffect(() => {
     async function loadFavorites(): Promise<void> {
-      // Load favorite foods from api
+      try {
+        const { data } = await api.get('favorites');
+
+        setFavorites(
+          data.map((item: Food) => ({
+            ...item,
+            formattedPrice: formatValue(item.price),
+          })),
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     loadFavorites();
